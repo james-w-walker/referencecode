@@ -1,0 +1,303 @@
+@isTest
+private class OrderFutureHandlerTest {
+    
+  /*  @isTest static void test_method_one() {
+        CPQ_IDs__c cpqIds = CPQ_IDs__c.getOrgDefaults();
+        cpqIds.Disable_Process__c = true;
+        upsert cpqIds;
+        
+        //create acount record
+        Account account = new Account();
+
+            account.Name = 'Test acctName';
+            account.BillingCountry = 'USA';
+            account.Territory_16__c = 'AMCO -FGA - New England';
+            account.Business_Type__c = 'Education-K12';
+            account.Industry = 'Education';
+            account.Billing_Email__c = 'test@test.com';
+
+        insert account;
+
+        Contact contact = new Contact();
+
+            contact.AccountId = account.Id;
+            contact.Role_Within_Company__c = 'Legal';
+            contact.LastName = 'Muffin';
+            contact.LeadSource = 'Other';
+
+        insert contact;
+        
+        Bill_To_Ship_To__c billTo = new Bill_To_Ship_To__c();
+           billTo.Account__c = account.Id;
+           billTo.Country__c = 'United States';
+           billTo.Street_1__c = '216 West Main Street';
+           billTo.Street_2__c = '123 Secret Street';
+           billTo.City__c = 'Baltimore';
+           billTo.State__c = 'MD';
+           billTo.Zip_Postal_Code__c = '59802'; 
+           billTo.Email__c = 'test123@gmail.com';
+           billTo.Bill_To__c = true;
+           billTo.Channel_Pricing_Region__c = 'Apple';
+        
+        insert billTo;
+        
+         Bill_To_Ship_To__c shipTo = new Bill_To_Ship_To__c();
+           shipTo.Account__c = account.Id;
+           shipTo.Country__c = 'United States';
+           shipTo.Street_1__c = '216 West Main Street';
+           shipTo.Street_2__c = '123 Secret Street';
+           shipTo.City__c = 'Baltimore';
+           shipTo.State__c = 'MD';
+           shipTo.Zip_Postal_Code__c = '59802'; 
+           shipTo.Email__c = 'test123@gmail.com';
+           shipTo.Ship_To__c = true;
+        
+        insert shipTo;
+
+        // Create a product record
+        Product2 product = new Product2();
+
+            product.ProductCode = 'product-1';
+            product.Name = 'Hardware Product 1';
+            product.Description = 'Hardware Product 1 Description';
+            product.Family = 'HardwareFamily';
+            product.Generate_Asset__c = true;
+            product.IsActive = true;
+            product.SBQQ__SubscriptionPricing__c = 'Fixed Price';
+            product.SBQQ__SubscriptionType__c = 'Renewable';
+            product.SBQQ__PricingMethod__c = 'List';
+            product.SBQQ__SubscriptionBase__c = 'List';
+            product.SBQQ__SubscriptionTerm__c = 12;
+            product.SBQQ__QuantityEditable__c = true;
+            product.SBQQ__IncludeInMaintenance__c = true;
+        
+        insert product;    
+
+        //create pricebook record
+        // Pricebook2 testPB = new Pricebook2();
+        
+            //  testPB.Name = 'Test Pricebook';
+            //  testPB.isActive = true;
+
+        // insert testPB;
+
+        //create pricebook entry record
+        PricebookEntry PBE = new PricebookEntry(); 
+        
+            PBE.Product2Id = product.Id;
+            PBE.Pricebook2Id = Test.getStandardPricebookId();
+            PBE.UnitPrice = 1;
+            PBE.IsActive = true;
+    
+        insert PBE;
+
+        System.debug('Pricebook Entry Id ' + PBE.ID);
+        System.debug('Pricebook Id' + PBE.Pricebook2Id);
+
+        //create Opp
+        Opportunity opp = new Opportunity();
+
+            opp.Name = 'Test Opp';
+            opp.AccountId = account.Id;
+            opp.Type = 'New Business';
+            opp.Order_Type__c = 'New';
+            opp.StageName = 'Connect';
+            opp.CloseDate = System.Today() + 1;
+            opp.Sales_Forecast_Category__c = '3 - Pipeline';
+            opp.ForecastCategoryName = 'Pipeline';
+            opp.PO_Contract_Number__c = '123';
+            opp.Bill_To__c = billTo.Id;
+            opp.Ship_To__c = shipTo.Id;
+
+        insert opp;
+
+Test.startTest();
+
+        //create Quote
+        SBQQ__Quote__c quote = new SBQQ__Quote__c();
+
+            quote.SBQQ__Primary__c = True;
+            quote.SBQQ__Type__c = 'Quote';
+            quote.SBQQ__Opportunity2__c = opp.Id;
+            quote.SBQQ__Account__c = account.Id;
+            quote.SBQQ__StartDate__c = System.Today();
+            quote.SBQQ__SubscriptionTerm__c = 12;
+            quote.SBQQ__PriceBook__c = Test.getStandardPricebookId();
+            quote.SBQQ__PricebookId__c = Test.getStandardPricebookId();
+            quote.ApprovalStatus__c = 'Approved';
+
+        insert quote;
+
+            quote.SBQQ__PriceBook__c = Test.getStandardPricebookId();
+            quote.SBQQ__PricebookId__c = Test.getStandardPricebookId();
+
+        update quote;
+        
+
+        //create Quote Line
+        SBQQ__QuoteLine__c quoteline = new SBQQ__QuoteLine__c();
+        
+            quoteLine.SBQQ__PricebookEntryId__c = PBE.id; 
+            quoteLine.SBQQ__Bundle__c = false;
+            quoteLine.SBQQ__PricingMethod__c = product.SBQQ__PricingMethod__c;
+            quoteLine.SBQQ__CustomerPrice__c = 100;
+            quoteLine.SBQQ__ListPrice__c = 100;
+            quoteLine.SBQQ__NetPrice__c = 100;
+            quoteLine.SBQQ__OriginalPrice__c = 100;
+            quoteLine.SBQQ__PartnerPrice__c = 100;
+            quoteLine.SBQQ__Product__c = product.Id;
+            quoteLine.SBQQ__ProrateMultiplier__c = 1;
+            quoteLine.SBQQ__ProratedListPrice__c = 100;
+            quoteLine.SBQQ__ProratedPrice__c = 100;
+            quoteLine.SBQQ__Quantity__c = 1;
+            quoteLine.SBQQ__Quote__c = quote.Id;
+            quoteLine.SBQQ__RegularPrice__c = 100;
+            quoteLine.SBQQ__SpecialPrice__c = 100;
+            quoteLine.SBQQ__SubscriptionBase__c = product.SBQQ__SubscriptionBase__c;
+            quoteLine.SBQQ__SubscriptionPricing__c = product.SBQQ__SubscriptionPricing__c;
+
+        insert quoteline;
+
+        System.debug('Pricebook Entry Id 2 ' + quoteline.SBQQ__PricebookEntryId__c);
+        System.debug('Pricebook Id 2' + quote.SBQQ__PricebookId__c);
+
+
+            opp.StageName = 'Closed Won';
+            opp.Order_Management_Review_Status__c = 'Approved';
+            opp.Order_Management_Checklist_Complete__c = True;
+            opp.Auto_Create_Order__c = False;
+            opp.Finance_Checklist_Complete__c = True;
+            opp.Finance_Status__c = 'Approved';
+            opp.SBQQ__Ordered__c = True;
+            opp.Bill_To__c = billTo.Id;
+            opp.Ship_To__c = shipTo.Id;
+
+
+       // update opp;
+
+
+        
+        // Order order = CA2_CPQTestUtil.createAutomatedOrderFromOpportunity(opp.id);
+        
+            
+            
+        // Order order = [SELECT Id, SBQQ__Quote__c, EffectiveDate, Date_Updated__c, Status, Do_Not_Activate__c
+        //              FROM Order 
+        //              WHERE SBQQ__Quote__c = IN : quote.id]
+
+    Test.stopTest();
+
+
+    } */
+    
+    @isTest static void test_method_two() {
+    
+       CPQ_IDs__c cpqIds = CPQ_IDs__c.getOrgDefaults();
+    cpqIds.Disable_Process__c = true;
+    upsert cpqIds;
+        // Implement test code
+        Account acc= new Account();
+        acc=TestUtility.newAccount('Test Account', 'Commercial', 'Education');
+        acc.Territory_16__c='AMCO - ENT - IBM'; 
+        insert acc;
+        
+        Id oppRecordTypeId = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('Bushel Opportunity').getRecordTypeId();
+        
+         Bill_To_Ship_To__c billTo = new Bill_To_Ship_To__c();
+           billTo.Account__c = acc.Id;
+           billTo.Country__c = 'United States';
+           billTo.Street_1__c = '216 West Main Street';
+           billTo.Street_2__c = '123 Secret Street';
+           billTo.City__c = 'Baltimore';
+           billTo.State__c = 'MD';
+           billTo.Zip_Postal_Code__c = '59802'; 
+           billTo.Email__c = 'test123@gmail.com';
+           billTo.Bill_To__c = true;
+           billTo.Channel_Pricing_Region__c = 'Apple';
+        
+        insert billTo;
+        
+         Bill_To_Ship_To__c shipTo = new Bill_To_Ship_To__c();
+           shipTo.Account__c = acc.Id;
+           shipTo.Country__c = 'United States';
+           shipTo.Street_1__c = '216 West Main Street';
+           shipTo.Street_2__c = '123 Secret Street';
+           shipTo.City__c = 'Baltimore';
+           shipTo.State__c = 'MD';
+           shipTo.Zip_Postal_Code__c = '59802'; 
+           shipTo.Email__c = 'test123@gmail.com';
+           shipTo.Ship_To__c = true;
+        
+        insert shipTo;
+        
+        Opportunity opp= new Opportunity(Name='Test Opp', stageName='Create', closeDate=system.today(),
+                                         type='New Business',
+                                         accountId=acc.Id, Bill_To__c = billTo.Id, Ship_To__c = shipTo.Id,
+                                         RecordtypeId=oppRecordTypeId
+                                        );   
+        
+        Insert opp;
+        
+        
+        SBQQ__Quote__c quote1= new SBQQ__Quote__c(SBQQ__Opportunity2__c=opp.Id, SBQQ__Account__c=acc.Id );
+        insert quote1;
+        quote1.ApprovalStatus__c='Approved';
+        update quote1;
+        opp.Bill_To__c = billTo.Id;
+        opp.Ship_To__c = shipTo.Id;
+        opp.StageName='Closed Won';
+        update opp;
+        system.debug(quote1.Id);
+             Id pricebookId = Test.getStandardPricebookId();
+        Order Ord = new Order( AccountId=acc.Id,
+                              EffectiveDate=System.today(),
+                              SBQQ__Quote__c=quote1.Id,
+                              status='draft',
+                              pricebook2Id=pricebookId
+                             );
+        
+        insert Ord;
+        Product2 p1 = new Product2(Name='Product Monthly 1111', Family='Monthly', isActive=true, CurrencyIsoCode='USD');
+        Product2 p2 = new Product2(Name='Product Yearly 2222', Family='Yearly', isActive=true, CurrencyIsoCode='USD');
+        
+        insert new List<Product2>{p1, p2};
+            
+       
+        
+        PricebookEntry pbe1 = new PricebookEntry(Pricebook2id=pricebookId, 
+                                                 Product2id=p1.ID, 
+                                                 isActive=true, 
+                                                 CurrencyIsoCode='USD', 
+                                                 unitPrice=100);
+        PricebookEntry pbe2 = new PricebookEntry(Pricebook2id=pricebookId, 
+                                                 Product2id=p2.ID, 
+                                                 isActive=true, CurrencyIsoCode='USD', 
+                                                 unitPrice=50);
+        
+        insert pbe1; 
+        insert pbe2;
+        
+         
+        OrderItem oi = new OrderItem(OrderId=ord.id,
+                                     Quantity=1, 
+                                     UnitPrice = 1020,
+                                     product2Id=p1.Id,
+                                     PricebookEntryId=pbe1.Id
+                                    ); 
+        insert oi;
+        
+        Order o=[select id,Status from Order where id=: ord.Id]; 
+        
+        o.Status='Activated';        
+        update o;
+        
+        o.Status = 'draft';
+        o.Date_Updated__c = true;
+        o.Do_Not_Activate__c = false;
+        o.SBQQ__PriceCalcStatus__c = 'Not Needed';
+        update o;
+
+    //Test.stopTest();
+    }
+    
+}
